@@ -61,8 +61,20 @@ export default class Hanman18 extends WordPressMadara {
     async _getPages(chapter) {
         const request = new Request(new URL(chapter.id, this.url), this.requestOptions);
         const scripts = await this.fetchDOM(request, 'script');
-        const scriptContent = scripts[5].textContent;
-        const data = JSON5.parse(scriptContent.match(/var slides_p_path = ([\S\s]*);[\S\s]*\$\(document\)/)[1]).map(item => atob(item));
+
+        let dataStr;
+        for (let i = 0; i < scripts.length; i++) {
+            const content = scripts[i].textContent;
+            const match = content.match(/var slides_p_path = ([\S\s]*);[\S\s]*\$\(document\)/);
+            if (match) {
+                dataStr = match[1];
+                break;
+            }
+        }
+        if (!dataStr) {
+            throw new Error('数据异常');
+        }
+        const data = JSON5.parse(dataStr).map(item => atob(item));
         return data.map(image => this.createConnectorURI({
             url: this.getAbsolutePath(image, request.url),
             referer: request.url
