@@ -3,6 +3,11 @@ description: Notify that a connector is not working
 title: "[<NameOfConnector>] Connector not working"
 labels: ["Website Change"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!CAUTION]
+        > Do **NOT** report **MangaLife** or **MangaSee**: use their new website/connector **WeebCentral**
   - type: checkboxes
     attributes:
       label: Is there an existing issue for this connector?
